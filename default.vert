@@ -3,10 +3,16 @@
 //layout info helps OpenGL read the Data it receives
 //for exemple first line below says that on the 0th layout, there is vec3 datatype for positions
 
+//Positions/Coordinates
 layout (location = 0) in vec3 aPos; //The shader is taking an input vec3 called "aPos"
+//Color
 layout (location = 1) in vec3 aColor;
+//Texture Coordinates
+layout (location = 2) in vec2 aTex;
 
 out vec3 color; //outputting a color for the vertex, to be passed down and used by the fragment shader later on
+
+out vec2 texCoord;
 
 //declare a float uniform variable
 //a uniform variable are kind of global variables that can be access within other shaders but also our main program file directly:
@@ -21,6 +27,7 @@ void main()
    gl_Position = vec4(aPos.x + aPos.x * scale, aPos.y + aPos.y * scale, aPos.z + aPos.z * scale, 1.0);
 
    color = aColor;
+   texCoord = aTex;
 }
 
 //NB:
