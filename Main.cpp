@@ -7,6 +7,7 @@
 #include"VBO.h"
 #include"EBO.h"
 #include"VAO.h"
+#include "Texture.h"
 
 int main()
 {
@@ -79,56 +80,11 @@ int main()
 	GLuint uniScaleID = glGetUniformLocation(shaderProgram.ID, "scale");
 
 	// TEXTURES //
-	stbi_set_flip_vertically_on_load(true); //to correct the fact that openGl and stb don't read an image in the same direction
-	//Getting the image and storing it in a unsigned char array called "imgBytes"
-	int widthImg, heightImg, numColCh;
-	unsigned char* imgData = stbi_load("wario_tex_512.png", &widthImg, &heightImg, &numColCh, 0);
-	if(!imgData)
-	{
-		std::cout << "Failed to load texture" << std::endl;
-	}
+	Texture catTex = Texture("serious_cat_512_8RGBA.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
+	catTex.texUnit(shaderProgram, "tex0", 0);
 
-	GLuint texture;
-	glGenTextures(1, &texture);
-	//Use the texture unit 0 for our texture. Texture Units are like slots for textures. 
-	//They generally come in bundle of 16 units and can be used so the fragment shader works on all those textures at the same time.
-	glActiveTexture(GL_TEXTURE0); 
-	glBindTexture(GL_TEXTURE_2D, texture);
-
-	//Modifying the binded texture's settings. Here we say we want to use GL_NEAREST as the protocol to use when scaling the image
-	//Could also be GL_LINEAR ( check online on https://learnopengl.com/Getting-started/Textures to see difference )
-	//MIN and MAG corresponds to the Magnifying and Minifying operations ie scaling up or down. The texture filtering setting needs to be done for both of them separately.
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-	//Setting the protocol to use for mapping (ie when we go farther than the pixels of the texture, thenthe texture is repeated/clamped/etc...)
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-	//float flatColor[] = {1.0f, 1.0f, 1.0f, 1.0f};
-	//glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, flatColor);
-
-	if (imgData)
-	{
-		//Generate the Image with for the currently bounded texture with given settings ( NB : GL_UNSIGNED_BYTE is the data type of our pixels )
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, widthImg, heightImg, 0, GL_RGB, GL_UNSIGNED_BYTE, imgData);
-		//Generate the mipmaps for the texture (smaller resolution versions of the texture used when the img is far away)
-		glGenerateMipmap(GL_TEXTURE_2D);
-	}
-
-
-	stbi_image_free(imgData); //delete the data for the img
-	glBindTexture(GL_TEXTURE_2D, 0); //unbind the texture now, so we dont accidentally make changes to it later on.
-
-	//Set reference in the fragment shader to our texture
-	GLuint uniTex0ID = glGetUniformLocation(shaderProgram.ID, "tex0");
-	shaderProgram.Activate();
-	glUniform1i(uniTex0ID, 0); //Modifying uniform int var corresponding to the texture unit ID. NOTE: must be done AFTER activating the shaderProgram
-
-
-
-
-
+	Texture warioTex = Texture("wario_tex_512_8RGBA.png", GL_TEXTURE_2D, GL_TEXTURE1, GL_RGBA, GL_UNSIGNED_BYTE);
+	warioTex.texUnit(shaderProgram, "tex0", 1);
 
 	//Specifying a nice deep blue color we want for the window 
 	//( to replace the default white color) in the Back Buffer
@@ -155,8 +111,8 @@ int main()
 		elapsedTime += 0.001f;
 		float curScale = std::sin(elapsedTime) * 0.5f;
 		glUniform1f(uniScaleID, curScale); //Modifying uniform float var. NOTE: must be done AFTER activating the shaderProgram
-		
-		glBindTexture(GL_TEXTURE_2D, texture);
+
+		catTex.Bind();
 
 		//telling openGL we're using the VAO vertex array as our vertices data
 		VAO1.Bind();
@@ -181,7 +137,8 @@ int main()
 	EBO1.Delete();
 	shaderProgram.Delete();
 
-	glDeleteTextures(1, &texture);
+	catTex.Delete();
+	warioTex.Delete();
 
 	//Delete window before ending the program
 	glfwDestroyWindow(window);

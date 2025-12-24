@@ -142,12 +142,14 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="shaderClass.cpp" />
     <ClCompile Include="stb.cpp" />
+    <ClCompile Include="Texture.cpp" />
     <ClCompile Include="VAO.cpp" />
     <ClCompile Include="VBO.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EBO.h" />
     <ClInclude Include="shaderClass.h" />
+    <ClInclude Include="Texture.h" />
     <ClInclude Include="VAO.h" />
     <ClInclude Include="VBO.h" />
   </ItemGroup>
@@ -156,7 +158,10 @@
     <None Include="default.vert" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\..\..\..\..\Downloads\wario_tex_512.png" />
+    <Image Include="..\..\..\..\..\Downloads\serious_cat_512_8RGB.png" />
+    <Image Include="..\..\..\..\..\Downloads\serious_cat_512_8RGBA.png" />
+    <Image Include="..\..\..\..\..\Downloads\wario_tex_512_8RGBA.png" />
+    <Image Include="wario_tex_512_8RGB.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

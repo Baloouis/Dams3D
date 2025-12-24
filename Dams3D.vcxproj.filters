@@ -22,6 +22,9 @@
     <ClCompile Include="stb.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EBO.h">
@@ -34,6 +37,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="VBO.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -63,7 +69,16 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\..\..\..\..\Downloads\wario_tex_512.png">
+    <Image Include="..\..\..\..\..\Downloads\serious_cat_512_8RGB.png">
+      <Filter>Resource Files\Textures</Filter>
+    </Image>
+    <Image Include="..\..\..\..\..\Downloads\serious_cat_512_8RGBA.png">
+      <Filter>Resource Files\Textures</Filter>
+    </Image>
+    <Image Include="..\..\..\..\..\Downloads\wario_tex_512_8RGBA.png">
+      <Filter>Resource Files\Textures</Filter>
+    </Image>
+    <Image Include="wario_tex_512_8RGB.png">
       <Filter>Resource Files\Textures</Filter>
     </Image>
   </ItemGroup>
