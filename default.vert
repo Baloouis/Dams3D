@@ -20,13 +20,21 @@ out vec2 texCoord;
 //in other shaders just declare the same line as below and then use the "scale" variable, just like here
 uniform float scale; 
 
+//All transformation matrices ( needed for 3D viewing with perspective )
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 proj;
+
 void main()
 {
    //Using openGL keyword "gl_Position" used for the vertex position.
    //Here its kinda like our shader method was outputting the gl_Position value ( even though its not exactly the case)
-   gl_Position = vec4(aPos.x + aPos.x * scale, aPos.y + aPos.y * scale, aPos.z + aPos.z * scale, 1.0);
+   //using all matrices to get vertice position in perspective
+   gl_Position = proj * view * model * vec4(aPos, 1.0);
 
+    //Assigns the colors from the Vertex Data to "color"
    color = aColor;
+    //Assigns the texture coordinates from the Vertex Data to "texCoord"
    texCoord = aTex;
 }
 

@@ -49,7 +49,7 @@ Texture::Texture(const char* imageName, GLenum textureType, GLenum slot, GLenum 
 }
 
 //Set reference in the fragment shader to our texture
-void Texture::texUnit(Shader shader, const char* uniformName, GLuint unit)
+void Texture::texUnit(Shader& shader, const char* uniformName, GLuint unit)
 {
 	// Gets the location of the uniform
 	GLuint uniTexID = glGetUniformLocation(shader.ID, uniformName);
