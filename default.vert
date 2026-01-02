@@ -18,19 +18,21 @@ out vec2 texCoord;
 //a uniform variable are kind of global variables that can be access within other shaders but also our main program file directly:
 //In main program file, get the value with glGetUniformLocation(...) and then glGetUniformuiv(...)
 //in other shaders just declare the same line as below and then use the "scale" variable, just like here
-uniform float scale; 
+//uniform float scale;
 
 //All transformation matrices ( needed for 3D viewing with perspective )
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 proj;
 
+uniform mat4 camMatrix;
+
 void main()
 {
    //Using openGL keyword "gl_Position" used for the vertex position.
    //Here its kinda like our shader method was outputting the gl_Position value ( even though its not exactly the case)
    //using all matrices to get vertice position in perspective
-   gl_Position = proj * view * model * vec4(aPos, 1.0);
+   gl_Position = camMatrix * vec4(aPos, 1.0);
 
     //Assigns the colors from the Vertex Data to "color"
    color = aColor;

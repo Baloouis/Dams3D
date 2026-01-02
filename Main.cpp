@@ -11,6 +11,7 @@
 #include"EBO.h"
 #include"VAO.h"
 #include "Texture.h"
+#include "Camera.h"
 
 const unsigned widthWindow = 800;
 const unsigned heightWindow = 800;
@@ -65,7 +66,18 @@ int main()
 		3, 0, 4
 	};
 
-
+	glm::vec3 pyramidWorldPos[] = 
+	{ 
+		glm::vec3(0.0f, 0.0f, -2.0f),
+		glm::vec3(0.5f, 1.f, -4.0f),
+		glm::vec3(-3.f, -0.5f, -7.0f),
+	};
+	float pyramidLocalRotX[] =
+	{
+		0.f,
+		90.f,
+		-45.f,
+	};
 
 	Shader shaderProgram("default.vert", "default.frag");
 
@@ -88,9 +100,6 @@ int main()
 	VAO1.Unbind();
 	VBO1.Unbind();
 	EBO1.Unbind();
-
-	//Get reference to (i.e. get ID of ) uniform variable "scale" used in the vertex shader. A uniform variable is a kind of universal/global variable accessible from everywhere
-	GLuint uniScaleID = glGetUniformLocation(shaderProgram.ID, "scale");
 
 	// TEXTURES //
 	Texture catTex = Texture("serious_cat_512_8RGBA.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
@@ -117,10 +126,12 @@ int main()
 	// Enables the Depth Buffer. To draw closer meshes above farther ones.
 	glEnable(GL_DEPTH_TEST);
 
+	//creating a camera object that will be used to update transformation matrixes
+	Camera camera(widthWindow, heightWindow, glm::vec3(0.f, 0.f, 100.f));
+
 	//Main while loop for our application
 	while (!glfwWindowShouldClose(window))
 	{
-
 		//setting the image background color
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
 		//Clearing prev values in color buffer and depth buffer
@@ -129,6 +140,20 @@ int main()
 		//setting our application to use the shaderProgram we created before for our rendering
 		shaderProgram.Activate();
 		
+
+
+		///// CAMERA
+		// Get user input for camera mvt
+		camera.Inputs(window);
+		//Update settings for the camera transformation matrix
+		float fovRad = glm::radians(45.0f);
+		float screenAspectRatio = (float)(widthWindow / heightWindow);
+		float nearPlane = 0.1f;
+		float farPlane = 1000.0f;
+		camera.Matrix(fovRad, nearPlane, farPlane, shaderProgram, "camMatrix");
+		/////
+		
+
 		//Check to rotate model
 		double currentTime = glfwGetTime();
 		if (currentTime >= prevTime + (1/ rotateFreq)) 
@@ -136,34 +161,6 @@ int main()
 			modelRotation += 0.5f;
 			prevTime = currentTime;
 		}
-		//////Transformation matrices
-		glm::mat4 model = glm::mat4(1.0f);
-		glm::mat4 view = glm::mat4(1.0f);
-		glm::mat4 proj = glm::mat4(1.0f);
-
-		// Assigns different transformations to each matrix
-		model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.f, 1.f, 0.f));
-		view = glm::translate(view, glm::vec3(0.0f, -0.5f, -2.0f));
-		float fovRad = glm::radians(45.0f);
-		float screenAspectRatio = (float)(widthWindow / heightWindow);
-		float nearPlane = 0.1f;
-		float farPlane = 100.0f;
-
-		//proj = glm::ortho(0.0f, 800.0f, 0.0f, 800.0f, nearPlane, farPlane);
-		proj = glm::perspective(fovRad, screenAspectRatio, nearPlane, farPlane);
-
-		//setting matrixes uniforms variables, to be used later in the vertex shader
-		int modelLoc = glGetUniformLocation(shaderProgram.ID, "model");
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		int viewLoc = glGetUniformLocation(shaderProgram.ID, "view");
-		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-		int projLoc = glGetUniformLocation(shaderProgram.ID, "proj");
-		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(proj));
-		////
-
-		elapsedTime += 0.001f;
-		float curScale = std::sin(elapsedTime) * 0.5f;
-		glUniform1f(uniScaleID, curScale); //Modifying uniform float var. NOTE: must be done AFTER activating the shaderProgram
 
 		catTex.Bind();
 
@@ -173,6 +170,7 @@ int main()
 		//Draw our geometry using TRIANGLES primitive (using the 9 first values of the EBO index buffer)
 		int nbIndices = sizeof(indices) / sizeof(int);
 		glDrawElements(GL_TRIANGLES, nbIndices, GL_UNSIGNED_INT, 0);
+
 		//glDrawArrays(GL_TRIANGLES, 0, 3);
 
 		//Swap the buffers between Front/Back Buffers to make sure the image is updated each frame
