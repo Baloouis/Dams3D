@@ -46,53 +46,20 @@ int main()
 	glViewport(0, 0, widthWindow, heightWindow);
 
 
-	//Main Mesh ( Pyramid )
+	//Main Mesh ( Plane )
 	GLfloat vertices[] =
-	{ //     COORDINATES     /        COLORS          /    TexCoord   /        NORMALS       //
-		-0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f, 	 0.0f, 0.0f,      0.0f, -1.0f, 0.0f, // Bottom side
-		-0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	 0.0f, 5.0f,      0.0f, -1.0f, 0.0f, // Bottom side
-		 0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	 5.0f, 5.0f,      0.0f, -1.0f, 0.0f, // Bottom side
-		 0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	 5.0f, 0.0f,      0.0f, -1.0f, 0.0f, // Bottom side
-
-		-0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f, 	 0.0f, 0.0f,     -0.8f, 0.5f,  0.0f, // Left Side
-		-0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	 5.0f, 0.0f,     -0.8f, 0.5f,  0.0f, // Left Side
-		 0.0f, 0.8f,  0.0f,     0.92f, 0.86f, 0.76f,	 2.5f, 5.0f,     -0.8f, 0.5f,  0.0f, // Left Side
-
-		-0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	 5.0f, 0.0f,      0.0f, 0.5f, -0.8f, // Non-facing side
-		 0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	 0.0f, 0.0f,      0.0f, 0.5f, -0.8f, // Non-facing side
-		 0.0f, 0.8f,  0.0f,     0.92f, 0.86f, 0.76f,	 2.5f, 5.0f,      0.0f, 0.5f, -0.8f, // Non-facing side
-
-		 0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	 0.0f, 0.0f,      0.8f, 0.5f,  0.0f, // Right side
-		 0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	 5.0f, 0.0f,      0.8f, 0.5f,  0.0f, // Right side
-		 0.0f, 0.8f,  0.0f,     0.92f, 0.86f, 0.76f,	 2.5f, 5.0f,      0.8f, 0.5f,  0.0f, // Right side
-
-		 0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	 5.0f, 0.0f,      0.0f, 0.5f,  0.8f, // Facing side
-		-0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f, 	 0.0f, 0.0f,      0.0f, 0.5f,  0.8f, // Facing side
-		 0.0f, 0.8f,  0.0f,     0.92f, 0.86f, 0.76f,	 2.5f, 5.0f,      0.0f, 0.5f,  0.8f  // Facing side
+	{ //     COORDINATES     /        COLORS        /    TexCoord    /       NORMALS     //
+		-1.0f, 0.0f,  1.0f,		0.0f, 0.0f, 0.0f,		0.0f, 0.0f,		0.0f, 1.0f, 0.0f,
+		-1.0f, 0.0f, -1.0f,		0.0f, 0.0f, 0.0f,		0.0f, 2.0f,		0.0f, 1.0f, 0.0f,
+		 1.0f, 0.0f, -1.0f,		0.0f, 0.0f, 0.0f,		2.0f, 2.0f,		0.0f, 1.0f, 0.0f,
+		 1.0f, 0.0f,  1.0f,		0.0f, 0.0f, 0.0f,		2.0f, 0.0f,		0.0f, 1.0f, 0.0f
 	};
 
 	// Indices for vertices order
 	GLuint indices[] =
 	{
-		0, 1, 2, // Bottom side
-		0, 2, 3, // Bottom side
-		4, 6, 5, // Left side
-		7, 9, 8, // Non-facing side
-		10, 12, 11, // Right side
-		13, 15, 14 // Facing side
-	};
-
-	glm::vec3 pyramidWorldPos[] = 
-	{ 
-		glm::vec3(0.0f, 0.0f, -2.0f),
-		glm::vec3(0.5f, 1.f, -4.0f),
-		glm::vec3(-3.f, -0.5f, -7.0f),
-	};
-	float pyramidLocalRotX[] =
-	{
-		0.f,
-		90.f,
-		-45.f,
+		0, 1, 2,
+		0, 2, 3
 	};
 
 
@@ -151,12 +118,19 @@ int main()
 	EBO1.Unbind();
 
 	// TEXTURES //
-	Texture catTex = Texture("serious_cat_512_8RGBA.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
-	catTex.texUnit(shaderProgram, "tex0", 0);
-
+	
+	Texture baseTex = Texture("wooden_gate.png", GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE);
+	baseTex.texUnit(shaderProgram, "tex0", 0);
+	Texture specTex = Texture("wooden_gate_Spec.png", GL_TEXTURE_2D, 1, GL_RED, GL_UNSIGNED_BYTE); //GL_RED cause specular tex are only in black and white
+	specTex.texUnit(shaderProgram, "tex1", 1);
+	/*
 	Texture warioTex = Texture("wario_tex_512_8RGBA.png", GL_TEXTURE_2D, GL_TEXTURE1, GL_RGBA, GL_UNSIGNED_BYTE);
 	warioTex.texUnit(shaderProgram, "tex0", 1);
 
+	Texture woodTex = Texture("pine_bark.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
+	woodTex.texUnit(shaderProgram, "tex0", 2);
+
+	*/
 
 	////to draw the LIGHT MESH object in the scene
 	Shader lightShaderProgram("light.vert", "light.frag");
@@ -180,15 +154,15 @@ int main()
 	glm::mat4 lightModel = glm::mat4(1.0f);
 	lightModel = glm::translate(lightModel, lightPos);
 
-	glm::vec3 pyramidPos = glm::vec3(0.0f, 0.0f, 0.0f);
-	glm::mat4 pyramidModel = glm::mat4(1.0f);
-	pyramidModel = glm::translate(pyramidModel, pyramidPos);
+	glm::vec3 planePos = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::mat4 planeModel = glm::mat4(1.0f);
+	planeModel = glm::translate(planeModel, planePos);
 
 	lightShaderProgram.Activate();
 	glUniformMatrix4fv(glGetUniformLocation(lightShaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(lightModel));
 	glUniform4f(glGetUniformLocation(lightShaderProgram.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
 	shaderProgram.Activate();
-	glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(pyramidModel));
+	glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(planeModel));
 	glUniform4f(glGetUniformLocation(shaderProgram.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
 	glUniform3f(glGetUniformLocation(shaderProgram.ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
 
@@ -211,7 +185,7 @@ int main()
 	glEnable(GL_DEPTH_TEST);
 
 	//creating a camera object that will be used to update transformation matrixes
-	Camera camera(widthWindow, heightWindow, glm::vec3(0.f, 0.f, 2.f));
+	Camera camera(widthWindow, heightWindow, glm::vec3(0.f, .5f, 2.f));
 
 	//Main while loop for our application
 	while (!glfwWindowShouldClose(window))
@@ -242,7 +216,8 @@ int main()
 		glUniform3f(glGetUniformLocation(shaderProgram.ID, "camPos"), camera.Position.x, camera.Position.y, camera.Position.z);
 		//Send updated camera matrix to shader program of main geometry.
 		camera.ExportMatrix(shaderProgram, "camMatrix");
-		catTex.Bind();
+		baseTex.Bind();
+		specTex.Bind();
 
 		//Check to rotate model
 		double currentTime = glfwGetTime();
@@ -282,8 +257,10 @@ int main()
 	EBO1.Delete();
 	shaderProgram.Delete();
 
-	catTex.Delete();
-	warioTex.Delete();
+	baseTex.Delete();
+	specTex.Delete();
+	//warioTex.Delete();
+	//woodTex.Delete();
 
 	lightVAO.Delete();
 	lightVBO.Delete();

@@ -93,5 +93,23 @@
     <Image Include="wario_tex_512_8RGB.png">
       <Filter>Resource Files\Textures</Filter>
     </Image>
+    <Image Include="..\..\..\..\..\Downloads\pine_bark_1k.blend\pine_bark.png">
+      <Filter>Resource Files\Textures</Filter>
+    </Image>
+    <Image Include="..\..\..\..\..\Downloads\pine_bark_1k.blend\pine_bark_Spec.png">
+      <Filter>Resource Files\Textures</Filter>
+    </Image>
+    <Image Include="..\..\..\..\..\Downloads\planks.png">
+      <Filter>Resource Files\Textures</Filter>
+    </Image>
+    <Image Include="..\..\..\..\..\Downloads\planksSpec.png">
+      <Filter>Resource Files\Textures</Filter>
+    </Image>
+    <Image Include="..\..\..\..\..\Downloads\wooden_gate_1k.blend\textures\wooden_gate_Spec.png">
+      <Filter>Resource Files\Textures</Filter>
+    </Image>
+    <Image Include="..\..\..\..\..\Downloads\wooden_gate_1k.blend\textures\wooden_gate.png">
+      <Filter>Resource Files\Textures</Filter>
+    </Image>
   </ItemGroup>
 </Project>

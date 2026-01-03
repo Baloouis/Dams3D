@@ -162,9 +162,15 @@
     <None Include="light.vert" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="..\..\..\..\..\Downloads\pine_bark_1k.blend\pine_bark.png" />
+    <Image Include="..\..\..\..\..\Downloads\pine_bark_1k.blend\pine_bark_Spec.png" />
+    <Image Include="..\..\..\..\..\Downloads\planks.png" />
+    <Image Include="..\..\..\..\..\Downloads\planksSpec.png" />
     <Image Include="..\..\..\..\..\Downloads\serious_cat_512_8RGB.png" />
     <Image Include="..\..\..\..\..\Downloads\serious_cat_512_8RGBA.png" />
     <Image Include="..\..\..\..\..\Downloads\wario_tex_512_8RGBA.png" />
+    <Image Include="..\..\..\..\..\Downloads\wooden_gate_1k.blend\textures\wooden_gate.png" />
+    <Image Include="..\..\..\..\..\Downloads\wooden_gate_1k.blend\textures\wooden_gate_Spec.png" />
     <Image Include="wario_tex_512_8RGB.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

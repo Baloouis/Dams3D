@@ -11,6 +11,7 @@ in vec3 currentPos; // current world pos of our vertice
 
 
 uniform sampler2D tex0; //sampler1D/2D/3D is just the OpenGL Built-in data type for textures. We use it to pass access to the texture we want to the fragment shader
+uniform sampler2D tex1;
 
 uniform vec4 lightColor;
 uniform vec3 lightPos;
@@ -27,13 +28,14 @@ void main()
 	float diffuse = max(dot(normal, lightDirection), 0.0f); //we put max() with 0.0 to get rid of negative values
 
 	//computing specular lightning ( ie direct reflection from the light source on the object, going towards the camera)
-	float specularLight = 0.50f; //max intensity of specular lighting
+	float specularLight = 0.75f; //max intensity of specular lighting
 	vec3 viewDirection = normalize(camPos - currentPos);
 	vec3 reflectionDirection = reflect(-lightDirection, normal); //negative lightDirection to get reflection of lightning going towards the plane, not away from it
 	float specAmount = max(dot(viewDirection, reflectionDirection), 0.f);
-	specAmount = pow(specAmount, 8);
+	specAmount = pow(specAmount, 16);
 	float specular = specAmount * specularLight;
 
 	//outputs final color
-	FragColor = texture(tex0, texCoord) * lightColor * (diffuse + ambient + specular);
+	FragColor = texture(tex0, texCoord) * lightColor * (diffuse + ambient + specular * texture(tex1, texCoord).r);
+
 }

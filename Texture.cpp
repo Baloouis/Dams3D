@@ -2,7 +2,7 @@
 #include <stb/stb_image.h>
 
 
-Texture::Texture(const char* imageName, GLenum textureType, GLenum slot, GLenum format, GLenum pixelType)
+Texture::Texture(const char* imageName, GLenum textureType, GLuint slot, GLenum format, GLenum pixelType)
 {
 	//assign the type of the texture to the Texture object
 	texType = textureType;
@@ -22,7 +22,8 @@ Texture::Texture(const char* imageName, GLenum textureType, GLenum slot, GLenum 
 	glGenTextures(1, &ID);
 	//Assign our texture to a Texture Unity. Texture Units are like slots for textures. 
 	//They generally come in bundle of 16 units and can be used so the fragment shader works on all those textures at the same time.
-	glActiveTexture(slot);
+	glActiveTexture(GL_TEXTURE0 + slot);
+	unit = slot;
 	glBindTexture(textureType, ID);
 
 	//Modifying the binded texture's settings. Here we say we want to use GL_NEAREST as the protocol to use when scaling the image
@@ -40,6 +41,7 @@ Texture::Texture(const char* imageName, GLenum textureType, GLenum slot, GLenum 
 	// glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, flatColor);
 
 	//Generate the Image with for the currently bounded texture with given settings ( NB : GL_UNSIGNED_BYTE is the data type of our pixels )
+	//IMPORTANT : we may have an error at the glGenerateMipmap() line if the internal format of the texture does not correspond to the internal format specified here (ie GL_RGBA)
 	glTexImage2D(textureType, 0, GL_RGBA, widthImg, heightImg, 0, format, pixelType, imgData);
 	//Generate the mipmaps for the texture (smaller resolution versions of the texture used when the img is far away)
 	glGenerateMipmap(textureType);
@@ -61,6 +63,7 @@ void Texture::texUnit(Shader& shader, const char* uniformName, GLuint unit)
 
 void Texture::Bind()
 {
+	glActiveTexture(GL_TEXTURE0 + unit);
 	glBindTexture(texType, ID);
 }
 
