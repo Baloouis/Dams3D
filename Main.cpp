@@ -46,24 +46,40 @@ int main()
 	glViewport(0, 0, widthWindow, heightWindow);
 
 
+	//Main Mesh ( Pyramid )
 	GLfloat vertices[] =
-	{	// COORDINATES		|	COLORS			|	texture coords
-		-0.5f, 0.0f, 0.5f, 0.83f, 0.70f, 0.44f, 0.0f, 0.0f,
-		-0.5f, 0.0f, -0.5f, 0.83f, 0.70f, 0.44f, 5.0f, 0.0f,
-		0.5f, 0.0f, -0.5f, 0.83f, 0.70f, 0.44f, 0.0f, 0.0f,
-		0.5f, 0.0f, 0.5f, 0.83f, 0.70f, 0.44f, 5.0f, 0.0f,
-		0.0f, 0.8f, 0.0f, 0.92f, 0.86f, 0.76f, 2.5f, 5.0f,
+	{ //     COORDINATES     /        COLORS          /    TexCoord   /        NORMALS       //
+		-0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f, 	 0.0f, 0.0f,      0.0f, -1.0f, 0.0f, // Bottom side
+		-0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	 0.0f, 5.0f,      0.0f, -1.0f, 0.0f, // Bottom side
+		 0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	 5.0f, 5.0f,      0.0f, -1.0f, 0.0f, // Bottom side
+		 0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	 5.0f, 0.0f,      0.0f, -1.0f, 0.0f, // Bottom side
+
+		-0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f, 	 0.0f, 0.0f,     -0.8f, 0.5f,  0.0f, // Left Side
+		-0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	 5.0f, 0.0f,     -0.8f, 0.5f,  0.0f, // Left Side
+		 0.0f, 0.8f,  0.0f,     0.92f, 0.86f, 0.76f,	 2.5f, 5.0f,     -0.8f, 0.5f,  0.0f, // Left Side
+
+		-0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	 5.0f, 0.0f,      0.0f, 0.5f, -0.8f, // Non-facing side
+		 0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	 0.0f, 0.0f,      0.0f, 0.5f, -0.8f, // Non-facing side
+		 0.0f, 0.8f,  0.0f,     0.92f, 0.86f, 0.76f,	 2.5f, 5.0f,      0.0f, 0.5f, -0.8f, // Non-facing side
+
+		 0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	 0.0f, 0.0f,      0.8f, 0.5f,  0.0f, // Right side
+		 0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	 5.0f, 0.0f,      0.8f, 0.5f,  0.0f, // Right side
+		 0.0f, 0.8f,  0.0f,     0.92f, 0.86f, 0.76f,	 2.5f, 5.0f,      0.8f, 0.5f,  0.0f, // Right side
+
+		 0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	 5.0f, 0.0f,      0.0f, 0.5f,  0.8f, // Facing side
+		-0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f, 	 0.0f, 0.0f,      0.0f, 0.5f,  0.8f, // Facing side
+		 0.0f, 0.8f,  0.0f,     0.92f, 0.86f, 0.76f,	 2.5f, 5.0f,      0.0f, 0.5f,  0.8f  // Facing side
 	};
 
 	// Indices for vertices order
 	GLuint indices[] =
 	{
-		0, 1, 2,
-		0, 2, 3,
-		0, 1, 4,
-		1, 2, 4,
-		2, 3, 4,
-		3, 0, 4
+		0, 1, 2, // Bottom side
+		0, 2, 3, // Bottom side
+		4, 6, 5, // Left side
+		7, 9, 8, // Non-facing side
+		10, 12, 11, // Right side
+		13, 15, 14 // Facing side
 	};
 
 	glm::vec3 pyramidWorldPos[] = 
@@ -79,6 +95,37 @@ int main()
 		-45.f,
 	};
 
+
+	//Light Source Mesh ( Cube light )
+
+	GLfloat lightCubeVertices[] =
+	{	// COORDINATES		|	COLORS			|	texture coords
+		-0.1f, -0.1f, -0.1f,
+		0.1f, -0.1f, -0.1f,
+		-0.1f, 0.1f, -0.1f,
+		0.1f, 0.1f, -0.1f,
+		-0.1f, -0.1f, 0.1f,
+		0.1f, -0.1f, 0.1f,
+		-0.1f, 0.1f, 0.1f,
+		0.1f, 0.1f, 0.1f,
+
+	};
+	GLuint lightCubeIndices[] =
+	{
+		0, 1, 2,
+		1, 2, 3,
+		2, 3, 6,
+		3, 6, 7,
+		1, 3, 5,
+		3, 5, 7,
+		0, 1, 4,
+		1, 4, 5,
+		0, 2, 4,
+		2, 4, 6,
+		4, 5, 6,
+		5, 6, 7,
+	};
+
 	Shader shaderProgram("default.vert", "default.frag");
 
 	//To send info from the GPU to the CPU we do it in big batches
@@ -92,9 +139,11 @@ int main()
 	EBO EBO1(indices, sizeof(indices));
 
 	// Links VBO attributes such as coordinates and colors to VAO
-	VAO1.LinkAttrib(VBO1, 0, 3, GL_FLOAT, 8 * sizeof(float), (void*)0);
-	VAO1.LinkAttrib(VBO1, 1, 3, GL_FLOAT, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-	VAO1.LinkAttrib(VBO1, 2, 2, GL_FLOAT, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+	VAO1.LinkAttrib(VBO1, 0, 3, GL_FLOAT, 11 * sizeof(float), (void*)0);
+	VAO1.LinkAttrib(VBO1, 1, 3, GL_FLOAT, 11 * sizeof(float), (void*)(3 * sizeof(float)));
+	VAO1.LinkAttrib(VBO1, 2, 2, GL_FLOAT, 11 * sizeof(float), (void*)(6 * sizeof(float)));
+	VAO1.LinkAttrib(VBO1, 3, 3, GL_FLOAT, 11 * sizeof(float), (void*)(8 * sizeof(float)));
+
 
 	//optional, to make sure we don't modified the VBOs,VAOs by accident later
 	VAO1.Unbind();
@@ -108,6 +157,41 @@ int main()
 	Texture warioTex = Texture("wario_tex_512_8RGBA.png", GL_TEXTURE_2D, GL_TEXTURE1, GL_RGBA, GL_UNSIGNED_BYTE);
 	warioTex.texUnit(shaderProgram, "tex0", 1);
 
+
+	////to draw the LIGHT MESH object in the scene
+	Shader lightShaderProgram("light.vert", "light.frag");
+
+	VAO lightVAO;
+	lightVAO.Bind();
+
+	VBO lightVBO(lightCubeVertices, sizeof(lightCubeVertices));
+	EBO lightEBO(lightCubeIndices, sizeof(lightCubeIndices));
+	// Links VBO attributes such as coordinates and colors to VAO
+	lightVAO.LinkAttrib(lightVBO, 0, 3, GL_FLOAT, 3 * sizeof(float), (void*)0);
+
+	lightVAO.Unbind();
+	lightVBO.Unbind();
+	lightEBO.Unbind();
+	////
+
+
+	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+	glm::vec3 lightPos = glm::vec3(0.5f, 0.5f, 0.5f);
+	glm::mat4 lightModel = glm::mat4(1.0f);
+	lightModel = glm::translate(lightModel, lightPos);
+
+	glm::vec3 pyramidPos = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::mat4 pyramidModel = glm::mat4(1.0f);
+	pyramidModel = glm::translate(pyramidModel, pyramidPos);
+
+	lightShaderProgram.Activate();
+	glUniformMatrix4fv(glGetUniformLocation(lightShaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(lightModel));
+	glUniform4f(glGetUniformLocation(lightShaderProgram.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
+	shaderProgram.Activate();
+	glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(pyramidModel));
+	glUniform4f(glGetUniformLocation(shaderProgram.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
+	glUniform3f(glGetUniformLocation(shaderProgram.ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
+
 	//Specifying a nice deep blue color we want for the window 
 	//( to replace the default white color) in the Back Buffer
 	glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
@@ -119,7 +203,7 @@ int main()
 
 	float elapsedTime = glfwGetTime();
 
-	float modelRotation = 0;
+	float modelRotation = 0.1f;
 	float rotateFreq = 60;
 	float prevTime = glfwGetTime();
 
@@ -127,7 +211,7 @@ int main()
 	glEnable(GL_DEPTH_TEST);
 
 	//creating a camera object that will be used to update transformation matrixes
-	Camera camera(widthWindow, heightWindow, glm::vec3(0.f, 0.f, 100.f));
+	Camera camera(widthWindow, heightWindow, glm::vec3(0.f, 0.f, 2.f));
 
 	//Main while loop for our application
 	while (!glfwWindowShouldClose(window))
@@ -137,48 +221,57 @@ int main()
 		//Clearing prev values in color buffer and depth buffer
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		//setting our application to use the shaderProgram we created before for our rendering
-		shaderProgram.Activate();
-		
-
-
 		///// CAMERA
-		// Get user input for camera mvt
+		// Handle user input for camera mvt
 		camera.Inputs(window);
 		//Update settings for the camera transformation matrix
-		float fovRad = glm::radians(45.0f);
+		float fovRad = 45.0f;
 		float screenAspectRatio = (float)(widthWindow / heightWindow);
 		float nearPlane = 0.1f;
 		float farPlane = 1000.0f;
-		camera.Matrix(fovRad, nearPlane, farPlane, shaderProgram, "camMatrix");
+		//Update camera transformation matrix
+		camera.UpdateMatrix(fovRad, nearPlane, farPlane);
 		/////
 		
 
+		//// DRAW MAIN GEOMETRY
+		//setting our application to use the shaderProgram we created before for our rendering
+		shaderProgram.Activate();
+
+		//Exports the camera Position to the Fragment Shader for specular lighting
+		glUniform3f(glGetUniformLocation(shaderProgram.ID, "camPos"), camera.Position.x, camera.Position.y, camera.Position.z);
+		//Send updated camera matrix to shader program of main geometry.
+		camera.ExportMatrix(shaderProgram, "camMatrix");
+		catTex.Bind();
+
 		//Check to rotate model
 		double currentTime = glfwGetTime();
-		if (currentTime >= prevTime + (1/ rotateFreq)) 
+		if (currentTime >= prevTime + (1 / rotateFreq))
 		{
-			modelRotation += 0.5f;
-			prevTime = currentTime;
+			//pyramidModel = glm::rotate(pyramidModel, glm::radians(modelRotation), glm::vec3(0.f, 1.f, 0.f));
+			//glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(pyramidModel));			prevTime = currentTime;
 		}
-
-		catTex.Bind();
 
 		//telling openGL we're using the VAO vertex array as our vertices data
 		VAO1.Bind();
-
 		//Draw our geometry using TRIANGLES primitive (using the 9 first values of the EBO index buffer)
 		int nbIndices = sizeof(indices) / sizeof(int);
 		glDrawElements(GL_TRIANGLES, nbIndices, GL_UNSIGNED_INT, 0);
+		////
 
-		//glDrawArrays(GL_TRIANGLES, 0, 3);
+		//// DRAW LIGHT CUBE IN THE SCENE
+		lightShaderProgram.Activate();
+
+		camera.ExportMatrix(lightShaderProgram, "camMatrix");
+		lightVAO.Bind();
+		nbIndices = sizeof(lightCubeIndices) / sizeof(int);
+		glDrawElements(GL_TRIANGLES, nbIndices, GL_UNSIGNED_INT, 0);
+		////
+
 
 		//Swap the buffers between Front/Back Buffers to make sure the image is updated each frame
 		glfwSwapBuffers(window);
-
-
-		//Without this call, GLFW will not process the window events
-		//and the window would be visible but in a not responding state
+		//Without this call, GLFW will not process the window events, and the window would be visible but in a not responding state
 		glfwPollEvents();
 	}
 
@@ -191,6 +284,11 @@ int main()
 
 	catTex.Delete();
 	warioTex.Delete();
+
+	lightVAO.Delete();
+	lightVBO.Delete();
+	lightEBO.Delete();
+	lightShaderProgram.Delete();
 
 	//Delete window before ending the program
 	glfwDestroyWindow(window);

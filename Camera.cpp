@@ -9,8 +9,9 @@ Camera::Camera(int width, int height, glm::vec3 position)
 	Position = position;
 }
 
-void Camera::Matrix(float FOVdeg, float nearPlane, float farPlane, Shader& shader, const char* uniform)
+void Camera::UpdateMatrix(float FOVdeg, float nearPlane, float farPlane)
 {
+
 	//Transformation matrices init ( to identity matrices and not null )
 	glm::mat4 view = glm::mat4(1.0f);
 	glm::mat4 projection = glm::mat4(1.0f);
@@ -23,13 +24,19 @@ void Camera::Matrix(float FOVdeg, float nearPlane, float farPlane, Shader& shade
 	float screenAspectRatio = (float)(width / height);
 	projection = glm::perspective(glm::radians(FOVdeg), screenAspectRatio, nearPlane, farPlane);
 
-
-	//Setting matrixes uniforms variables, to be used later in the vertex shader
-	//NB : get reference to (i.e. get ID of ) uniform variable "camMatrix" used in the vertex shader. A uniform variable is a kind of universal/global variable accessible from everywhere
-	glUniformMatrix4fv(glGetUniformLocation(shader.ID, uniform), 1, GL_FALSE, glm::value_ptr(projection * view));
+	// Sets new camera matrix
+	cameraMatrix = projection * view;
 }
 
 
+
+void Camera::ExportMatrix(Shader& shader, const char* uniform)
+{
+	//Setting matrixes uniforms variables, to be used later in the vertex shader
+	//NB : get reference to (i.e. get ID of ) uniform variable "camMatrix" used in the vertex shader. A uniform variable is a kind of universal/global variable accessible from everywhere
+	glUniformMatrix4fv(glGetUniformLocation(shader.ID, uniform), 1, GL_FALSE, glm::value_ptr(cameraMatrix));
+
+}
 
 void Camera::Inputs(GLFWwindow* window)
 {
@@ -60,11 +67,11 @@ void Camera::Inputs(GLFWwindow* window)
 	}
 	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
 	{
-		speed = 0.4f;
+		speed = 0.01f;
 	}
 	else if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE)
 	{
-		speed = 0.1f;
+		speed = 0.005f;
 	}
 
 
@@ -104,6 +111,8 @@ void Camera::Inputs(GLFWwindow* window)
 
 		// Rotates the Orientation left and right
 		Orientation = glm::rotate(Orientation, glm::radians(-rotY), Up);
+
+		//Orientation = glm::normalize(Orientation);//otherwise we go faster in some directions compared to others
 
 		// Sets mouse cursor to the middle of the screen so that it doesn't end up roaming around
 		glfwSetCursorPos(window, (width / 2), (height / 2));
