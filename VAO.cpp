@@ -1,6 +1,5 @@
 #include"VAO.h"
 
-
 //The Vertex Array Object is a references container that store pointers to multiples VBOs,
 //it also tells OpenGL how to interpret the VBOs,
 //and is useful to quickly be able to switch between different VBOs

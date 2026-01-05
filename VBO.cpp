@@ -2,7 +2,7 @@
 
 // Constructor that generates a Vertex Buffer Object and links it to vertices. 
 // A VBO is used to store data on the vertices ( not just position but also additional info, such as color or texture coordinates, etc ...)
-VBO::VBO(GLfloat* vertices, GLsizeiptr size)
+VBO::VBO(std::vector<Vertex>& vertices)
 {
 	//(creating the reference container for the Vertex Buffer Object)
 	//Generate the VBO with only 1 object
@@ -10,7 +10,7 @@ VBO::VBO(GLfloat* vertices, GLsizeiptr size)
 	//Bind the VBO specifying it's a GL_ARRAY_BUFFER
 	glBindBuffer(GL_ARRAY_BUFFER, ID);
 	//Link our vertices data into the VBO
-	glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, vertices.size()*sizeof(Vertex), vertices.data(), GL_STATIC_DRAW);
 }
 
 // Binds the VBO

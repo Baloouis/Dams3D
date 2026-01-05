@@ -1,16 +1,16 @@
 #version 330 core //specify OpenGl version used
 //Positions/Coordinates
 layout (location = 0) in vec3 aPos; //The shader is taking an input vec3 called "aPos"
-//Color
-layout (location = 1) in vec3 aColor;
-//Texture Coordinates
-layout (location = 2) in vec2 aTex;
 //Normals ( NB : not necessarily normalized ! )
-layout (location = 3) in vec3 aNormal;
+layout (location = 1) in vec3 aNormal;
+//Color
+layout (location = 2) in vec3 aColor;
+//Texture Coordinates
+layout (location = 3) in vec2 aTex;
 
+out vec3 Normal;
 out vec3 color; //outputting a color for the vertex, to be passed down and used by the fragment shader later on
 out vec2 texCoord;
-out vec3 Normal;
 out vec3 currentPos;
 
 //Uniform variables are kind of qglobal variables that can be access both within other shaders but also our main program file directly
@@ -30,7 +30,7 @@ void main()
    gl_Position = camMatrix * vec4(currentPos, 1.0);
 
    //Passing vertex data to the fragment shader
+   Normal = aNormal;
    color = aColor;
    texCoord = aTex;
-   Normal = aNormal;
 }

@@ -1,14 +1,14 @@
 #include"EBO.h"
 
 // Constructor that generates a Element Buffer Object and links it to indices. An EBO is an index buffer, used to store the indices corresponding to the all the vertices of a model ( to help reduce memory usage overall )
-EBO::EBO(GLuint* indices, GLsizeiptr size)
+EBO::EBO(std::vector<GLuint> indices)
 {
 	//Generate the VBO with only 1 object
 	glGenBuffers(1, &ID);
 	//Bind the VBO specifying it's a GL_ARRAY_BUFFER
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ID);
 	//Link our vertices data into the VBO
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, indices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size()*sizeof(GLuint), indices.data(), GL_STATIC_DRAW);
 }
 
 // Binds the EBO

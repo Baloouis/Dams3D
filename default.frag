@@ -4,14 +4,14 @@ out vec4 FragColor; //The shader outputs a vec4 color
 //taking a vec3 "color" variable as input. 
 //It is passed down by the vertex shader directly. 
 //So its very important that the ouput var of the vertex shader and this input var have the exact same name
+in vec3 Normal; //NB : not necessarily normalized yet !
 in vec3 color; 
 in vec2 texCoord; 
-in vec3 Normal; //NB : not necessarily normalized yet !
 in vec3 currentPos; // current world pos of our vertice
 
 
-uniform sampler2D tex0; //sampler1D/2D/3D is just the OpenGL Built-in data type for textures. We use it to pass access to the texture we want to the fragment shader
-uniform sampler2D tex1;
+uniform sampler2D diffuse0; //sampler1D/2D/3D is just the OpenGL Built-in data type for textures. We use it to pass access to the texture we want to the fragment shader
+uniform sampler2D specular0;
 
 uniform vec4 lightColor;
 uniform vec3 lightPos;
@@ -46,7 +46,7 @@ vec4 pointLight()
 	float specular = specAmount * specularLight;
 
 	//return final color
-	return lightColor * (texture(tex0, texCoord) * (diffuse * intensityDistCoef + ambient) + specular * texture(tex1, texCoord).r * intensityDistCoef);
+	return lightColor * (texture(diffuse0, texCoord) * (diffuse * intensityDistCoef + ambient) + specular * texture(specular0, texCoord).r * intensityDistCoef);
 }
 
 vec4 directionalLight()
@@ -71,7 +71,7 @@ vec4 directionalLight()
 	float specular = specAmount * specularLight;
 
 	//return final color
-	return lightColor * (texture(tex0, texCoord) * (diffuse + ambient) + specular * texture(tex1, texCoord).r);
+	return lightColor * (texture(diffuse0, texCoord) * (diffuse + ambient) + specular * texture(specular0, texCoord).r);
 }
 
 
@@ -108,7 +108,7 @@ vec4 spotLight()
 	float intensityAngleCoef = clamp((angle - outerCone)/(innerCone - outerCone), 0.0f, 1.0f);
 
 	//return final color
-	return lightColor * (texture(tex0, texCoord) * (diffuse * intensityAngleCoef + ambient) + specular * texture(tex1, texCoord).r * intensityAngleCoef);
+	return lightColor * (texture(diffuse0, texCoord) * (diffuse * intensityAngleCoef + ambient) + specular * texture(specular0, texCoord).r * intensityAngleCoef);
 }
 
 void main()
