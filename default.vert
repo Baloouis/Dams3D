@@ -15,14 +15,19 @@ out vec3 currentPos;
 
 //Uniform variables are kind of qglobal variables that can be access both within other shaders but also our main program file directly
 //All transformation matrices ( needed for 3D viewing with perspective )
-uniform mat4 model;
 uniform mat4 camMatrix;
+uniform mat4 model;
+uniform mat4 translation;
+uniform mat4 rotation;
+uniform mat4 scale;
+
 //Light infos
 uniform vec3 lightPos;
 
 void main()
 {
-    currentPos = vec3(model * vec4(aPos, 1.0f));
+    //the "-" for the rotation is maybe needed because glm and the gltm model format used different rotation standards ( one clockwise and the other counter clockwise )
+    currentPos = vec3(model * translation * rotation * scale * vec4(aPos, 1.0f)); 
 
    //Using openGL keyword "gl_Position" used for the vertex position.
    //Here its kinda like our shader method was outputting the gl_Position value ( even though its not exactly the case)
@@ -32,5 +37,5 @@ void main()
    //Passing vertex data to the fragment shader
    Normal = aNormal;
    color = aColor;
-   texCoord = aTex;
+   texCoord = mat2(1.0, 0.0, 0.0, -1.0) * aTex; //The mat2() and *  operation are used to rotate the texture 90 degrees. Might be needed because of different standards for reading/writing textures
 }

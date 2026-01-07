@@ -2,7 +2,7 @@
 #include <stb/stb_image.h>
 
 
-Texture::Texture(const char* imageName, const char* textureType, GLuint slot, GLenum format, GLenum pixelType)
+Texture::Texture(const char* imageName, const char* textureType, GLuint slot)
 {
 	//assign the type of the texture to the Texture object
 	texType = textureType;
@@ -40,9 +40,22 @@ Texture::Texture(const char* imageName, const char* textureType, GLuint slot, GL
 	// float flatColor[] = {1.0f, 1.0f, 1.0f, 1.0f};
 	// glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, flatColor);
 
+
+	// Check what type of color channels the texture has by checking the data directly, and setting format var (used when loading texture ) accordingly.
+	GLenum format;
+	if (numColCh == 4)
+		format = GL_RGBA;
+	else if (numColCh == 3)
+		format = GL_RGB;
+	else if (numColCh == 1)
+		format = GL_RED;
+	else
+		throw std::invalid_argument("Automatic Texture type recognition failed");
+
+
 	//Generate the Image with for the currently bounded texture with given settings ( NB : GL_UNSIGNED_BYTE is the data type of our pixels )
 	//IMPORTANT : we may have an error at the glGenerateMipmap() line if the internal format of the texture does not correspond to the internal format specified here (ie GL_RGBA)
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, widthImg, heightImg, 0, format, pixelType, imgData);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, widthImg, heightImg, 0, format, GL_UNSIGNED_BYTE, imgData);
 	//Generate the mipmaps for the texture (smaller resolution versions of the texture used when the img is far away)
 	glGenerateMipmap(GL_TEXTURE_2D);
 

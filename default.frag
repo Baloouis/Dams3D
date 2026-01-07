@@ -8,7 +8,7 @@ in vec3 Normal; //NB : not necessarily normalized yet !
 in vec3 color; 
 in vec2 texCoord; 
 in vec3 currentPos; // current world pos of our vertice
-
+in mat4 localTr;
 
 uniform sampler2D diffuse0; //sampler1D/2D/3D is just the OpenGL Built-in data type for textures. We use it to pass access to the texture we want to the fragment shader
 uniform sampler2D specular0;
@@ -51,7 +51,7 @@ vec4 pointLight()
 
 vec4 directionalLight()
 {
-	vec3 lightDirection = normalize(vec3(-1.0f,-1.0f,0.0f)); // hard setted for directional light as all light rays are considered to be parallel
+	vec3 lightDirection = normalize(vec3(1.0f,-1.0f,-1.0f)); // hard setted for directional light as all light rays are considered to be parallel
 
 	//ambient lightning
 	float ambient = 0.20f; //to prevent pitch black darkness when object are not lit directly ( thus emulating natural ambiant light reflection in real life )
@@ -114,5 +114,5 @@ vec4 spotLight()
 void main()
 {
 	//outputs final color
-	FragColor = pointLight();
+	FragColor = directionalLight();
 }

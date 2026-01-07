@@ -12,10 +12,10 @@
 #include"VAO.h"
 #include "Texture.h"
 #include "Camera.h"
-#include "Mesh.h"
+#include "Model.h"
 
-const unsigned widthWindow = 800;
-const unsigned heightWindow = 800;
+const unsigned widthWindow = 1200;
+const unsigned heightWindow = 1200;
 int main()
 {
 	glfwInit();
@@ -47,24 +47,7 @@ int main()
 	glViewport(0, 0, widthWindow, heightWindow);
 
 
-	//Main Mesh ( Plane )
-	Vertex vertices[] =
-	{ //               COORDINATES           /            COLORS          /           NORMALS         /       TEXTURE COORDINATES    //
-		Vertex{glm::vec3(-1.0f, 0.0f,  1.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(0.0f, 0.0f)},
-		Vertex{glm::vec3(-1.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(0.0f, 1.0f)},
-		Vertex{glm::vec3(1.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(1.0f, 1.0f)},
-		Vertex{glm::vec3(1.0f, 0.0f,  1.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(1.0f, 0.0f)}
-	};
-
-	// Indices for vertices order
-	GLuint indices[] =
-	{
-		0, 1, 2,
-		0, 2, 3
-	};
-
 	//Light Source Mesh ( Cube light )
-
 	Vertex lightCubeVertices[] =
 	{ //     COORDINATES     //
 		Vertex{glm::vec3(-0.1f, -0.1f,  0.1f)},
@@ -92,28 +75,22 @@ int main()
 		4, 6, 7
 	};
 
-	//// TEXTURES //
-	Texture diffuseTex = Texture("wooden_gate.png", "diffuse", 0, GL_RGBA, GL_UNSIGNED_BYTE);
-	Texture specTex = Texture("wooden_gate_Spec.png", "specular", 1, GL_RED, GL_UNSIGNED_BYTE); //GL_RED cause specular tex are only in black and white
+
+
+
+	Shader shaderProgram("default.vert", "default.frag");
+
+	////to draw the LIGHT MESH object in the scene
+	//Textures
+	Texture diffuseTex = Texture("wooden_gate.png", "diffuse", 0);
+	Texture specTex = Texture("wooden_gate_Spec.png", "specular", 1);
 
 	Texture textures[] = {
 		diffuseTex,
 		specTex,
 	};
-	////
-
-
-	Shader shaderProgram("default.vert", "default.frag");
-
-	//Creating std::vectors from arrays using the range constructor with 1rst argument being the start address of the array and 2nd argument being the last adress of the array
-	std::vector<Vertex> vecVertices(vertices, vertices + sizeof(vertices) / sizeof(Vertex));
-	std::vector<GLuint> vecIndices(indices, indices + sizeof(indices) / sizeof(GLuint));
 	std::vector<Texture> vecTextures(textures, textures + sizeof(textures) / sizeof(Texture));
-
-	Mesh floorMesh = Mesh(vecVertices, vecIndices, vecTextures);
-
-
-	////to draw the LIGHT MESH object in the scene
+	
 	// Shader for light cube
 	Shader lightShaderProgram("light.vert", "light.frag");
 	// Store mesh data in vectors for the mesh
@@ -123,50 +100,37 @@ int main()
 	Mesh lightMesh(vecLightVerts, vecLightInd, vecTextures);
 	////
 
-
+	// Take care of all the light related things for shaders
 	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 	glm::vec3 lightPos = glm::vec3(0.5f, 0.5f, 0.5f);
 	glm::mat4 lightModel = glm::mat4(1.0f);
 	lightModel = glm::translate(lightModel, lightPos);
 
-	glm::vec3 planePos = glm::vec3(0.0f, 0.0f, 0.0f);
-	glm::mat4 planeModel = glm::mat4(1.0f);
-	planeModel = glm::translate(planeModel, planePos);
-
 	lightShaderProgram.Activate();
 	glUniformMatrix4fv(glGetUniformLocation(lightShaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(lightModel));
 	glUniform4f(glGetUniformLocation(lightShaderProgram.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
+
+
 	shaderProgram.Activate();
-	glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(planeModel));
 	glUniform4f(glGetUniformLocation(shaderProgram.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
 	glUniform3f(glGetUniformLocation(shaderProgram.ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
 
-	//Specifying a nice deep blue color we want for the window 
-	//( to replace the default white color) in the Back Buffer
-	glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
-	//Clean the back buffer and assign the new color to it
-	glClear(GL_COLOR_BUFFER_BIT);
-
-	//Swap the front and back buffers
-	glfwSwapBuffers(window);
-
-	float elapsedTime = glfwGetTime();
-
-	float modelRotation = 0.1f;
-	float rotateFreq = 60;
-	float prevTime = glfwGetTime();
 
 	// Enables the Depth Buffer. To draw closer meshes above farther ones.
 	glEnable(GL_DEPTH_TEST);
 
-	//creating a camera object that will be used to update transformation matrixes
+	//Creating a camera object that will be used to update transformation matrixes
 	Camera camera(widthWindow, heightWindow, glm::vec3(0.f, .5f, 2.f));
+
+	Model model("models/mushroom_warrior/scene.gltf");
 
 	//Main while loop for our application
 	while (!glfwWindowShouldClose(window))
 	{
-		//setting the image background color
+		//Specifying a nice deep blue color we want for the window 
+		//( to replace the default white color) in the Back Buffer
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
+
 		//Clearing prev values in color buffer and depth buffer
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -177,18 +141,18 @@ int main()
 		float fovRad = 45.0f;
 		float screenAspectRatio = (float)(widthWindow / heightWindow);
 		float nearPlane = 0.1f;
-		float farPlane = 1000.0f;
+		float farPlane = 5000.0f;
 		//Update camera transformation matrix
 		camera.UpdateMatrix(fovRad, nearPlane, farPlane);
 		/////
 
 
 		//// DRAW MAIN GEOMETRY
-		floorMesh.Draw(shaderProgram, camera);
+		model.Draw(shaderProgram, camera);
 		////
 
 		//// DRAW LIGHT CUBE IN THE SCENE
-		lightMesh.Draw(lightShaderProgram, camera);
+		//lightMesh.Draw(lightShaderProgram, camera);
 		////
 
 		//Swap the buffers between Front/Back Buffers to make sure the image is updated each frame
@@ -212,4 +176,10 @@ int main()
 	//Terminate GLW before ending the program
 	glfwTerminate();
 	return 0;
+}
+
+//Easing Methods
+float easeInOutCubic(float x)
+{
+	return x < 0.5 ? 4 * x * x * x : 1 - pow(-2 * x + 2, 3) / 2;
 }
