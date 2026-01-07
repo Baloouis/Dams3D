@@ -12,6 +12,7 @@ out vec3 Normal;
 out vec3 color; //outputting a color for the vertex, to be passed down and used by the fragment shader later on
 out vec2 texCoord;
 out vec3 currentPos;
+out mat4 localTr;
 
 //Uniform variables are kind of qglobal variables that can be access both within other shaders but also our main program file directly
 //All transformation matrices ( needed for 3D viewing with perspective )
@@ -38,4 +39,5 @@ void main()
    Normal = aNormal;
    color = aColor;
    texCoord = mat2(1.0, 0.0, 0.0, -1.0) * aTex; //The mat2() and *  operation are used to rotate the texture 90 degrees. Might be needed because of different standards for reading/writing textures
+   localTr = model * translation * rotation * scale;
 }

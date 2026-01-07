@@ -124,6 +124,8 @@ int main()
 
 	Model model("models/mushroom_warrior/scene.gltf");
 
+	double currentTime;
+	double prevTime = glfwGetTime();
 	//Main while loop for our application
 	while (!glfwWindowShouldClose(window))
 	{
@@ -148,6 +150,14 @@ int main()
 
 
 		//// DRAW MAIN GEOMETRY
+		currentTime = glfwGetTime();
+		if (currentTime - prevTime > 0.01f)
+		{
+			model.RotateAroundAxis(glm::radians(0.1f), glm::vec3(0.0f, 1.0f, 0.0f));
+			float sinY = std::sinf(currentTime * 2.f);
+			//model.SetPosition(glm::vec3(0.0f, sinY, 0.0f));
+			prevTime = currentTime;
+		}
 		model.Draw(shaderProgram, camera);
 		////
 

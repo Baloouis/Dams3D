@@ -53,6 +53,10 @@ vec4 directionalLight()
 {
 	vec3 lightDirection = normalize(vec3(1.0f,-1.0f,-1.0f)); // hard setted for directional light as all light rays are considered to be parallel
 
+	//WIP : my attempt to update lightning direction in real time
+	//ie to take local mesh rotation into account when computing lightDirection
+	//lightDirection = normalize(vec3(-localTr * vec4(lightDirection, 1.0f))); 
+
 	//ambient lightning
 	float ambient = 0.20f; //to prevent pitch black darkness when object are not lit directly ( thus emulating natural ambiant light reflection in real life )
 	//diffuse lightning (main lightning cast over the object by the light)

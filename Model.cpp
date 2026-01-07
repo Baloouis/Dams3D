@@ -18,6 +18,12 @@ Model::Model(const char* file)
 
 void Model::Draw(Shader& shader, Camera& camera)
 {
+	//copy rootMatrix
+	glm::mat4 rootMatrixCopy(1.0f);
+	rootMatrixCopy = rootMatrixCopy * matricesMeshes[0];
+
+	//Apply model transformations from Rotate() and Translate() method to rootMatrix
+	matricesMeshes[0] = modelMatrix * matricesMeshes[0]; 
 
 	// Go over all meshes and draw each one
 	for (unsigned int i = 0; i < meshes.size(); i++)
@@ -25,6 +31,18 @@ void Model::Draw(Shader& shader, Camera& camera)
 		meshes[i].Mesh::Draw(shader, camera, matricesMeshes[i]);
 	}
 
+	//Restore rootMatrix value back to original;
+	matricesMeshes[0] = rootMatrixCopy;
+}
+
+void Model::RotateAroundAxis(float angle, glm::vec3 rotAxis)
+{
+	modelMatrix = glm::rotate(modelMatrix, angle, rotAxis);
+}
+
+void Model::SetPosition(glm::vec3 newPos)
+{
+	modelMatrix = glm::translate(modelMatrix, newPos);
 }
 
 void Model::loadMesh(unsigned int indMesh)

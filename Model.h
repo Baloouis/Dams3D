@@ -16,6 +16,9 @@ public:
 	//Draws the model
 	void Draw(Shader& shader, Camera& camera);
 
+	//WIP : method to apply modification to whole model rotation/position, by modifying "modelMatrix" class variable
+	void RotateAroundAxis(float angle, glm::vec3 rotAxis);
+	void SetPosition(glm::vec3 newPos);
 private:
 	// Variables for easy access
 	const char* file;
@@ -28,6 +31,9 @@ private:
 	std::vector<glm::quat> rotationsMeshes;
 	std::vector<glm::vec3> scalesMeshes;
 	std::vector<glm::mat4> matricesMeshes;
+
+	// WIP : a matrix to rotate/translate/scale the model as a whole
+	glm::mat4 modelMatrix = glm::mat4(1.0f);
 
 	// Used to keep track of loaded textures to prevents textures from being loaded twice ( or more )
 	std::vector<std::string> loadedTexName;
