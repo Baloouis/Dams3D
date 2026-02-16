@@ -9,7 +9,7 @@ Main sources used for this project are https://learnopengl.com/ website by Joey 
 - 3D Model Loading ( currently for gltf file format only ).
 - Lightning : Blinn–Phong implementation &
 directional/point/spotlight lightmodes.
-- Camera : moving in real-time via user inputs & orthographic/perpective implementation.
+- Camera : orthographic/perpective implementation & movement controlled via user inputs.
 
 # Next Features :
 - Expand 3D Model Loading using Assimp.
